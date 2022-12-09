@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous">
+    </script>
+
+    <title>Login Page</title>
+</head>
+
+<body>
+    <h1>WELCOME...</h1>
+    <div style="margin-left: 300px">
+        <p>Select Login Type</p>
+        <select id="loginType">
+            <option value="auctioneer" selected>auctioneer</option>
+            <option value="admin">admin</option>
+        </select>
+    </div>
+    <form class="d-flex flex-column w-25 ml-4" id="loginForm">
+        <label for="username">USERNAME</label>
+        <input id="username" type="text" placeholder="username" class="mb-3" />
+        <label for="password">PASSWORD</label>
+        <input id="password" type="password" placeholder="password" class="mb-3">
+        <button type="submit" style="width: 100px" class="btn btn-primary">LOGIN</button>
+    </form>
+    <p id="err" class="text-danger ml-4"></p>
+    <div class="ml-4 mt-3">
+        <p>New User?</p>
+        <a href="http://localhost:3000/signup"><button class="btn btn-success">SignUp</button></a>
+    </div>
+
+</body>
+
+</html>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const loginFormEl = document.getElementById('loginForm')
+    const usernameEl = document.getElementById('username')
+    const passwordEl = document.getElementById('password')
+    const loginTypeEl = document.getElementById('loginType')
+    const errEl = document.getElementById('err')
+
+    const loginDetails = {
+        username: '',
+        password: '',
+        loginType: loginTypeEl.value
+    }
+    //reading username input
+    usernameEl.addEventListener('change', event => {
+        loginDetails['username'] = event.target.value
+    })
+
+    //reading password input
+    passwordEl.addEventListener('change', event => {
+        loginDetails['password'] = event.target.value
+    })
+
+    //reading login type
+    loginTypeEl.addEventListener('change', event => {
+        loginDetails['loginType'] = event.target.value
+    })
+
+
+    //validaiong login details
+    loginFormEl.addEventListener('submit', event => {
+        event.preventDefault()
+
+        //check user in database
+        let options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify(loginDetails)
+        };
+        const URL = "http://localhost:3000/validate-user-login"
+        fetch(URL, options).then( async res => {
+            const responseMsg = await res.json()
+            console.log(responseMsg)
+            if(res.status == 200){
+                if(loginDetails['loginType'] == "auctioneer"){
+                    const jwt = responseMsg['message']
+                    const auctioneerDetails = {username: loginDetails['username'], jwToken: jwt}
+                    localStorage.setItem('auctioneerDetails', JSON.stringify(auctioneerDetails))
+                    window.location.replace("http://localhost:3000/auctioneer-dashboard")
+                }
+                if(loginDetails['loginType'] == "admin"){
+                    const jwt = responseMsg['message']
+                    const adminDetails = {username: loginDetails['username'], jwToken: jwt}
+                    localStorage.setItem('adminDetails', JSON.stringify(adminDetails))
+                    window.location.replace("http://localhost:3000/admin-dashboard")
+                }
+            }else if (res.status == 400){
+                errEl.textContent = responseMsg['message']
+            }else if (res.status == 401){
+                errEl.textContent = "Please fill all feilds properly"
+            }else{
+                errEl.textContent = 'Please SignUp First'
+            }
+        }).catch( err => {
+            console.log(err)
+        })
+
+
+
+
+    })
+</script>

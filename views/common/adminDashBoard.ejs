@@ -1,0 +1,34 @@
+<%- include('./adminHeader') %>
+<div class="">
+    <div class="d-flex">
+        <p class="m-2 font-weight-bold pt-1" id="userName">Welcome User</p>
+        <button class="btn btn-primary m-2" id="createAuction">Create Auction</button>
+        <button class="btn btn-success m-2" id="availableAuctions">Available Auctions</button>
+        <button class="btn btn-danger m-2" id="closedAuctions">Closed Auctions</button>
+    </div>
+</div>
+
+<script>
+    const userNameEl = document.getElementById('userName')
+    const createAuctionEl = document.getElementById("createAuction")
+    const availableAuctionsEl = document.getElementById('availableAuctions')
+    const closedAuctionsEl = document.getElementById('closedAuctions')
+
+    // const userDetals = JSON.parse(localStorage.getItem('adminDetails'))
+    userNameEl.textContent = "Welcome - " + userDetals['username']
+
+    //create new auction
+    createAuctionEl.addEventListener("click", () => {
+        window.location.replace("http://localhost:3000/add-new-auction")
+    })
+
+    //display available auctions
+    availableAuctionsEl.addEventListener('click', () => {
+        window.location.replace("http://localhost:3000/admin-view-auctions")
+    })
+
+    //display closed auctions
+    closedAuctionsEl.addEventListener('click', () => {
+        window.location.replace("http://localhost:3000/admin-view-closed-auctions")
+    })
+</script>

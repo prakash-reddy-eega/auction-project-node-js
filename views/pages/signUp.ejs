@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous">
+    </script>
+    <title>SignUp Page</title>
+</head>
+
+<body>
+    <div>
+        <h1>Auctioning</h1>
+        <form class="d-flex flex-column w-25 ml-4" id="signupForm">
+            <label for="fullname">FULL NAME</label>
+            <input id="fullname" type="text" placeholder="your full name" class="mb-3" />
+            <label for="username">USERNAME</label>
+            <input id="username" type="text" placeholder="username" class="mb-3" />
+            <label for="emailId">EMAIL ID</label>
+            <input id="emailId" type="email" placeholder="emailId" class="mb-3" />
+            <label for="password">PASSWORD</label>
+            <input id="password" type="password" placeholder="password" class="mb-3">
+            <label for="confirmPassword">CONFIRM PASSWORD</label>
+            <input id="confirmPassword" type="password" placeholder="confirm your password" class="mb-3">
+            <label for="userType">USER TYPE</label>
+            <select id="userType">
+                <option value="auctioneer" selected>auctioneer</option>
+                <option value="admin">admin</option>
+            </select>
+            <button type="submit" style="width: 100px" class="btn btn-primary mt-3">SING UP</button>
+        </form>
+        <p id="err" class="text-danger ml-4"></p>
+    </div>
+</body>
+
+</html>
+<script>
+    const fullnameEl = document.getElementById('fullname')
+    const usernameEl = document.getElementById('username')
+    const emailIdEl = document.getElementById('emailId')
+    const passwordEl = document.getElementById('password')
+    const confirmPasswordEl = document.getElementById('confirmPassword')
+    const userTypeEl = document.getElementById('userType')
+    const signupFormEl = document.getElementById('signupForm')
+    const errEl = document.getElementById('err')
+
+    const signupDetails = {
+        name: '',
+        username: '',
+        emailId: '',
+        password: '',
+        confirmPassword: '',
+        userType: userTypeEl.value
+    }
+
+    fullnameEl.addEventListener('change', event => {
+        signupDetails['name'] = event.target.value
+    })
+
+    usernameEl.addEventListener('change', event => {
+        signupDetails['username'] = event.target.value
+    })
+
+    emailIdEl.addEventListener('change', event => {
+        signupDetails['emailId'] = event.target.value
+    })
+
+    passwordEl.addEventListener('change', event => {
+        signupDetails['password'] = event.target.value
+    })
+
+    confirmPasswordEl.addEventListener('change', event => {
+        signupDetails['confirmPassword'] = event.target.value
+    })
+
+    userTypeEl.addEventListener('change', event => {
+        signupDetails['userType'] = event.target.value
+    })
+
+
+    const validatePasswords = () => {
+        //checking whether the both passwords same or not
+        if (signupDetails['password'] == signupDetails['confirmPassword']) {
+            //body data and options
+            const postData = {
+                email_id: signupDetails['emailId'],
+                name: signupDetails['name'],
+                username: signupDetails['username'],
+                password: signupDetails['password'],
+            }
+            let options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify(postData)
+            };
+            //sign up condition for auctioneer type    
+            if (signupDetails['userType'] == "auctioneer") {
+                const URL = "http://localhost:3000/add-auctioneer"
+
+                fetch(URL, options).then(async res => {
+                    const responseMsg = await res.json()
+                    console.log(responseMsg)
+                    if (res.status == 200) {
+                        window.location.replace("http://localhost:3000/login")
+                    } else if(res.status == 400){
+                        errEl.textContent = responseMsg['message']
+                    } else {
+                        errEl.textContent = "fill all feilds properly"
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+            //sign up condition for admin type
+            if (signupDetails['userType'] == "admin") {
+                const URL = "http://localhost:3000/add-admin"
+
+                fetch(URL, options).then(async res => {
+                    const responseMsg = await res.json()
+                    console.log(responseMsg)
+                    if (res.status == 200) {
+                        window.location.replace("http://localhost:3000/login")
+                    } else if(res.status == 400){
+                        errEl.textContent = responseMsg['message']
+                    } else{
+                        errEl.textContent = "Please Fill All Feilds Properly"
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+
+
+            }
+
+        } else {
+            errEl.textContent = "both passwords should be same"
+        }
+    }
+
+
+    signupFormEl.addEventListener('submit', event => {
+        event.preventDefault()
+        validatePasswords()
+    })
+</script>

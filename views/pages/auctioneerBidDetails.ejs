@@ -1,0 +1,36 @@
+<%- include('../common/auctioneerDashBoard') %>
+<div>
+    <h3 class="font-weight-bold m-3">My Bidding Details</h3>
+    <% if(biddingDetails.length == 0){ %>
+        <p class="font-weight-bold m-3"> You Din't Bid For Anything Yet</p>
+    <% }else{ %>
+        <div>
+            <table class="table">
+                <tr>
+                    <tr>
+                        <th>Admin name</th>
+                        <th>Auction Name</th>
+                        <th>Auction Type</th>
+                        <th>Min Amount</th>
+                        <th>Max Amount</th>
+                        <th>Bid Amount</th>
+                        <th>Auction Status</th>
+                        <th>Auctioneer  Name</th>
+                    </tr>
+                    <% biddingDetails.map( eachObj => { %>
+                        <tr><td> <%= eachObj['auction_id']['admin_id']['name'] %> </td>
+                            <td>  <%= eachObj['auction_id']['auction_name'] %> </td>
+                            <td>  <%= eachObj['auction_id']['auction_type'] %> </td>
+                            <td>  <%= eachObj['auction_id']['min_amount'] %> </td>
+                            <td>  <%= eachObj['auction_id']['max_amount'] %> </td>
+                            <td>  <%= eachObj['bid_amount'] %> </td>
+                            <td>  <%= eachObj['auction_id']['auction_status'] %> </td>
+                            <td>  <%= eachObj['auctioneer_id']['name'] %> </td>
+                        </tr>
+                    <% }) %>
+                </tr>
+            </table>
+        </div>
+    <% } %>
+    
+</div>

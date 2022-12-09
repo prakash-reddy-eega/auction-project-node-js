@@ -1,0 +1,199 @@
+<%- include('../common/adminDashBoard') %>
+<div class="ml-3">
+    <div class="d-flex" id="constainer">
+        <h3 class="font-weight-bold mt-3 mr-5"><%= auctionDetails['auction_name'] %> Details</h3>
+        <div class="ml-5 mt-3" id="editOptions">
+            <button class="btn btn-dark" type="button" id="saveButton">Save Details</button>
+        </div>
+    </div>
+    <p>  <span class="font-weight-bold"> Auction Id:    </span>  <span id="auctionObjId"> <%= auctionDetails['_id'] %> </span> </p>
+    <div id="closedView">
+        <p>  <span class="font-weight-bold"> Auction Name:  </span>   <%= auctionDetails['auction_name'] %> </p>
+        <!-- <p>  <span class="font-weight-bold"> Auction Id:    </span>   <%= auctionDetails['_id'] %> </p> -->
+        <p>  <span class="font-weight-bold"> Auction Type:  </span>   <%= auctionDetails['auction_type'] %> </p>
+        <p>  <span class="font-weight-bold"> Min Amount:    </span>   <%= auctionDetails['min_amount'] %> </p>
+        <p>  <span class="font-weight-bold"> Max Amount:    </span>   <%= auctionDetails['max_amount'] %> </p>
+        <p>  <span class="font-weight-bold"> Auction Status:</span> <span id="auctionStatus" > <%= auctionDetails['auction_status'] %>  </span></p>
+    </div>
+    <div id="runningView">
+        <!-- <p>  <span class="font-weight-bold"> Auction Id:    </span>   <%= auctionDetails['_id'] %> </p> -->
+        <div>
+            <label for="auctionName" class="font-weight-bold">Auction Name : </label> 
+            <input type="text" id="auctionName" value="<%= auctionDetails['auction_name'] %>"/>
+        </div>
+        <div class="">
+            <label for="auctionType" class="font-weight-bold">Auction Type : </label>
+            <select id="auctionType">
+                <option value="<%= auctionDetails['auction_type'] %>" selected><%= auctionDetails['auction_type'] %></option>
+                <option value="vehicle registration number" >Vehicle Registration Number</option>
+                <option value="land property">Land Property</option>
+            </select>
+        </div>
+        <div class="">
+            <label for="minAmount" class="font-weight-bold">Min Amount : </label>
+            <input type="text" id="minAmount" value="<%= auctionDetails['min_amount'] %>" />
+        </div>
+        <div class="">
+            <label for="maxAmount" class="font-weight-bold">Max Amount : </label>
+            <input type="text" id="maxAmount" value="<%= auctionDetails['max_amount'] %>" />
+        </div>
+        <div>
+            <label for="status" class="font-weight-bold">Auction Status : </label>
+            <select id="status">
+                <option value="<%= auctionDetails['auction_status'] %>" selected> <%= auctionDetails['auction_status'] %> </option>
+                <!-- <option value="open">Open</option>
+                <option value="running">Running</option>
+                <option value="closed">Closed</option> -->
+            </select>
+        </div>
+    </div>
+    <p id="resMessage" class="ml-3"></p>
+    <div id="forOpenAuctions">
+        <div class="mt-5" >
+            <h3 class="font-weight-bold mt-3 mr-5">Current Biddings</h3>
+            <p class="font-weight-bold ml-5"> No Bids Started Yet</p>
+        </div>
+    </div>
+    <div id="forRunningAuctions">
+        <div class="d-flex">
+            <h3 class="font-weight-bold mt-3 mr-5">Current Biddings</h3>
+            <div id="auctionButtons">
+                <button type="button" class="btn btn-info m-2" id="refreshButton">Refresh</button>
+                <button type="button" class="btn btn-danger m-2" id="closeButton">Close</button>
+            </div>
+        </div>
+        <table class="table">
+            <tr>
+                <th>User</th>
+                <th>Amount</th>
+            </tr>
+            <% biddingDetails.map( eachObj => { %>
+                <tr>
+                    <td> <%= eachObj['auctioneer_id']['name'] %> </td>
+                    <td> <%= eachObj['bid_amount'] %>  </td>
+                </tr>
+             <% }) %>
+        </table>
+        <p id="message"></p>
+    </div>
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const auctionStatusEl = document.getElementById('auctionStatus')
+    const editOptionsEl = document.getElementById('editOptions')
+    const constainerEl = document.getElementById('constainer')
+    const closedViewEl = document.getElementById('closedView')
+    const runningViewEl = document.getElementById('runningView')
+    const resMessageEl = document.getElementById('resMessage')
+    const auctionObjIdEl = document.getElementById('auctionObjId')
+    const messageEl = document.getElementById('message')
+
+    const saveButtonEl = document.getElementById('saveButton')
+    const auctionTypeEl = document.getElementById('auctionType')
+    const auctionNameEl = document.getElementById('auctionName')
+    const minAmountEl = document.getElementById('minAmount')
+    const maxAmountEl = document.getElementById('maxAmount')
+    const statusEl = document.getElementById('status')
+
+    const forRunningAuctionsEl = document.getElementById('forRunningAuctions')
+    const forOpenAuctionsEl = document.getElementById('forOpenAuctions')
+    const refreshButtonEl = document.getElementById('refreshButton')
+    const closeButtonEl = document.getElementById('closeButton')
+    const auctionButtonsEl = document.getElementById('auctionButtons')
+
+    const status = auctionStatusEl.textContent.trim()
+    if(status == "closed"){
+        runningViewEl.classList.add('d-none')
+        editOptionsEl.classList.add('d-none')
+        auctionButtonsEl.classList.add('d-none')
+    }else{
+        closedViewEl.classList.add('d-none')
+    }
+
+    //displaying current bidding card based on auction status
+    if(status == "open"){
+        forRunningAuctionsEl.classList.add('d-none')
+    }else if(status == 'running'){
+        forOpenAuctionsEl.classList.add('d-none')
+    }else if(status == 'closed'){
+        forOpenAuctionsEl.classList.add('d-none')
+        editOptionsEl.classList.add('d-none')
+    }
+
+    const updatedAuctionDetauls = {
+        auction_id: auctionObjIdEl.textContent.trim(),
+        auction_name: auctionNameEl.value,
+        auction_type: auctionTypeEl.value,
+        min_amount: minAmountEl.value,
+        max_amount: maxAmountEl.value,
+        auction_status: statusEl.value
+    }
+
+    //getting input details
+    auctionNameEl.addEventListener('change', event => {
+        updatedAuctionDetauls['auction_name'] = event.target.value
+    })
+
+    auctionTypeEl.addEventListener('change', event => {
+        updatedAuctionDetauls['auction_type'] = event.target.value
+    })
+
+    minAmountEl.addEventListener('change', event => {
+        updatedAuctionDetauls['min_amount'] = event.target.value
+    })
+
+    maxAmountEl.addEventListener('change', event => {
+        updatedAuctionDetauls['max_amount'] = event.target.value
+    })
+
+    statusEl.addEventListener('change', event => {
+        updatedAuctionDetauls['auction_status'] = event.target.value
+    })
+
+    //refresh page
+    refreshButtonEl.addEventListener('click', () => {
+        window.location.reload()
+    })
+
+    //closing bid
+    closeButtonEl.addEventListener('click', () => {
+        const URL = `http://localhost:3000/close-auction/${updatedAuctionDetauls['auction_id']}`
+        axios.get(URL).then( res => {
+            if(res.status == 200){
+                messageEl.classList.add('text-success')
+                messageEl.textContent = res.data
+            }else{
+                messageEl.classList.add('text-danger')
+                messageEl.textContent = res.data
+            }
+        }).catch( err => {
+            console.log(err)
+            if(typeof(err.response.data) == "string"){
+                messageEl.textContent = err.response.data
+            }else{
+                messageEl.textContent = err.message
+            }
+        })
+    })
+
+    saveButtonEl.addEventListener('click', event => {
+        console.log(updatedAuctionDetauls)
+        const URL = "http://localhost:3000/update-auction-details"
+        axios.post(URL, updatedAuctionDetauls).then( res => {
+            resMessageEl.classList.add('text-success')
+            resMessageEl.textContent = res.data
+            console.log(res)
+        }).catch( err => {
+            resMessageEl.classList.add('text-danger')
+            if(typeof(err.response.data) == "string"){
+                resMessageEl.textContent = err.response.data
+            }else{
+                resMessageEl.textContent = err.message
+            }
+            console.log(err)
+        })
+    })
+
+
+
+</script>

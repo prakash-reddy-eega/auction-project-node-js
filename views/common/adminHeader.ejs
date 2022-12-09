@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous">
+    </script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
+    <title>Admin Header</title>
+</head>
+
+<body>
+
+    <body>
+        <div class="d-flex justify-content-around">
+            <h4 class="font-weight-bold">Auctioning</h4>
+            <h4 class="font-weight-bold">Admin-Dashboard</h4>
+            <div id="profileContainer">
+                <div class="d-flex">
+                    <h4 class="font-weight-bold" id="user">User</h4>
+                    <iconify-icon icon="material-symbols:arrow-circle-down-rounded" width="30"></iconify-icon>
+                </div>
+                <button class="btn btn-danger d-none" style="margin-left: 110px" id="logoutButton">Logout</button>
+            </div>
+        </div>
+    </body>
+
+</html>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const userEl = document.getElementById('user')
+    const profileContainerEl = document.getElementById('profileContainer')
+    const userDetals = JSON.parse(localStorage.getItem('adminDetails'))
+    userEl.textContent = userDetals['username']
+    const buttonEl = document.createElement('button')
+    const logoutButtonEl = document.getElementById('logoutButton')
+
+    profileContainerEl.addEventListener('click', (event) => {
+        logoutButtonEl.classList.toggle('d-none')
+    })
+
+    logoutButtonEl.addEventListener("click", () => {
+        const URL = "http://localhost:3000/admin-logout"
+        axios.get(URL).then(res => {
+            localStorage.removeItem('adminDetails')
+                window.location.replace('http://localhost:3000/login')
+        }).catch(err => {
+            console.log(err)
+        })
+    })
+</script>

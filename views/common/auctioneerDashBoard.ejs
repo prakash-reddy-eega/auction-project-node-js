@@ -1,0 +1,28 @@
+<%- include('./auctioneerHeader') %>
+<div class="">
+    <div class="d-flex">
+        <p class="m-2 font-weight-bold pt-1" id="userName">Welcome User</p>
+        <button class="btn btn-success m-2" id="availableAuctions">Available Auctions</button>
+        <button class="btn btn-dark m-2" id="myBiddings">My Biddings</button>
+    </div>
+</div>
+<script>
+     const userNameEl = document.getElementById('userName')
+    const myBiddingsEl = document.getElementById("myBiddings")
+    const availableAuctionsEl = document.getElementById('availableAuctions')
+
+    // const userDetals = JSON.parse(localStorage.getItem('adminDetails'))
+    userNameEl.textContent = "Welcome - " + userDetals['username']
+
+    //display available auctions
+    availableAuctionsEl.addEventListener('click', () => {
+        window.location.replace("http://localhost:3000/auctioneer-available-auctions")
+    })
+
+    //displaying my biddings
+    myBiddingsEl.addEventListener('click',() => {
+        window.location.replace("http://localhost:3000/auctioneer-my-biddings")
+    })
+
+
+</script>

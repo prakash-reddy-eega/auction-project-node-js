@@ -1,0 +1,88 @@
+<%- include('../common/adminDashBoard') %>
+
+<div>
+    <h3 class="font-weight-bold mt-3">Create A  New Auction</h3>
+    <form id="createAuctionForm" class="m-3">
+        <div class="mb-2">
+            <label for="auctionName" class="font-weight-bold">Auction Name</label>
+            <input type="text" id="auctionName"/>
+        </div>
+        <div class="mb-2">
+            <label for="auctionType" class="font-weight-bold">Auction Type</label>
+            <select id="auctionType">
+                <option value="vehicle registration number" selected>Vehicle Registration Number</option>
+                <option value="land property">Land Property</option>
+            </select>
+        </div>
+        <div class="mb-2">
+            <label for="minAmount" class="font-weight-bold">Min Amount</label>
+            <input type="text" id="minAmount"  placeholder="enter number only"/>
+        </div>
+        <div class="mb-2">
+            <label for="maxAmount" class="font-weight-bold">Max Amount</label>
+            <input type="text" id="maxAmount" placeholder="enter number only"/>
+        </div>
+        <button type="submit" class="btn btn-dark">SUBMIT</button>
+    </form>
+    <p id="message" class="ml-3"></p>
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const createAuctionFormEl = document.getElementById('createAuctionForm')
+    const auctionNameEl = document.getElementById('auctionName')
+    const auctionTypeEl = document.getElementById('auctionType')
+    const minAmountEl = document.getElementById('minAmount')
+    const maxAmountEl = document.getElementById('maxAmount')
+    const messageEl = document.getElementById('message')
+
+    const auctionDetails = {
+        auctionName: '',
+        auctionType: auctionTypeEl.value,
+        minAmount: '',
+        maxAmount: ''
+    }
+
+    auctionNameEl.addEventListener('change', event => {
+        auctionDetails['auctionName'] = event.target.value
+    })
+
+    auctionTypeEl.addEventListener('change', event => {
+        auctionDetails['auctionType'] = event.target.value
+    })
+
+    minAmountEl.addEventListener('change', event => {
+        auctionDetails['minAmount'] = event.target.value
+    })
+
+    maxAmountEl.addEventListener('change', event => {
+        auctionDetails['maxAmount'] = event.target.value
+    })
+
+    createAuctionFormEl.addEventListener("submit", event => {
+        event.preventDefault()
+        const adminDetails = JSON.parse(localStorage.getItem('adminDetails'))
+        const postData = {
+            admin_username: adminDetails['username'],
+            auction_name: auctionDetails['auctionName'],
+            auction_type: auctionDetails['auctionType'],
+            min_amount: auctionDetails['minAmount'],
+            max_amount: auctionDetails['maxAmount']
+        }
+        const URL = "http://localhost:3000/insert-auction-db"
+        axios.post(URL, postData).then(res => {
+            if(res.status == 200){
+                messageEl.classList.add('text-success')
+                messageEl.textContent = res.data
+            }else{
+                messageEl.classList.add('text-danger')
+                messageEl.textContent = res.data
+            }
+        }).catch( err => {
+            messageEl.classList.add('text-danger')
+                messageEl.textContent = "Please check all feilds  "
+            console.log(err.response)
+        })
+        
+    })
+    
+</script>

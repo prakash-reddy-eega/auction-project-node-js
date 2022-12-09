@@ -1,0 +1,86 @@
+<%- include('../common/auctioneerDashBoard') %>
+<div class="ml-3">
+    <h3 class="font-weight-bold mt-3 mr-5">Bid Details</h3>
+    <div id="auctionBid">
+        <p>  <span class="font-weight-bold"> Auction Id:    </span>  <span id="auctionObjId"> <%= auctionDetails['_id'] %> </span> </p>
+        <p>  <span class="font-weight-bold"> Auction Name:  </span>   <%= auctionDetails['auction_name'] %> </p>
+        <p>  <span class="font-weight-bold"> Auction Type:  </span>   <%= auctionDetails['auction_type'] %> </p>
+        <p>  <span class="font-weight-bold"> Min Amount:    </span>   <%= auctionDetails['min_amount'] %> </p>
+        <p>  <span class="font-weight-bold"> Max Amount:    </span>   <%= auctionDetails['max_amount'] %> </p>
+        <p>  <span class="font-weight-bold"> Auction Status:</span> <span id="auctionStatus" > <%= auctionDetails['auction_status'] %>  </span></p>
+        <label class="font-weight-bold" for="bidAmount">Bid Amount:</label>
+        <input type="text" id="bidAmount" placeholder="EX: 40000"/>
+        <button class="btn btn-secondary ml-3" id="bidButton">Bid</button>
+    </div>
+    <p id="message"></p>
+    <div>
+        <% if(biddingDetails.length == 0){ %>
+            <h3 class="font-weight-bold mt-3 mr-5">Current Biddings</h3>
+            <p class="font-weight-bold"> No Bide Started Yet On This Auction</p>
+        <% }else{ %>
+            <div class="d-flex mt-5">
+                <h3 class="font-weight-bold mt-3 mr-5">Current Biddings</h3>
+                <button type="button" class="btn btn-info m-2" id="refreshButton">Refresh</button>
+            </div>
+            <table class="table">
+                <tr>
+                    <th>User</th>
+                    <th>Amount</th>
+                </tr>
+                <% biddingDetails.map( eachObj => { %>
+                    <tr>
+                        <td> <%= eachObj['auctioneer_id']['name'] %> </td>
+                        <td> <%= eachObj['bid_amount'] %>  </td>
+                    </tr>
+                 <% }) %>
+            </table>
+        <% } %>
+        
+    </div>
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const auctionObjIdEl = document.getElementById('auctionObjId')
+    const bidAmountEl = document.getElementById('bidAmount')
+    const bidButtonEl = document.getElementById('bidButton')
+    const messageEl = document.getElementById('message')
+    const refreshButtonEl = document.getElementById('refreshButton')
+
+    const loginUser = JSON.parse(localStorage.getItem('auctioneerDetails'))
+
+    const bidDetails = {
+        auctioneer_name: loginUser['username'].trim(),
+        auction_id: auctionObjIdEl.textContent.trim(),
+        bid_amount: ''
+    }
+    bidAmountEl.addEventListener('change', event => {
+        bidDetails['bid_amount'] = event.target.value
+    })
+
+    refreshButtonEl.addEventListener('click', () => {
+        window.location.reload()
+    })
+
+    bidButtonEl.addEventListener('click', () => {
+        const URL = "http://localhost:3000/make-bidding"
+        axios.post(URL, bidDetails).then( res => {
+            if(res.status == 200){
+                messageEl.classList.add('text-success')
+                messageEl.textContent = res.data
+                console.log(res)
+            }else{
+                messageEl.classList.add('text-danger')
+                messageEl.textContent = res.data
+            }
+        }).catch( err => {
+            messageEl.classList.add('text-danger')
+            if(typeof(err.response.data) == "string"){
+                messageEl.textContent = err.response.data
+            }else{
+                messageEl.textContent = err.message
+            }
+            console.log(err)
+        })
+    })
+
+</script>

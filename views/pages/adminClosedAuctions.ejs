@@ -1,0 +1,31 @@
+<%- include('../common/adminDashBoard') %>
+<div class="m-3">
+    <h3 class="font-weight-bold">Closed Auctions</h3>
+    <div>
+        <table class="table">
+            <tr>
+                <th>Admin name</th>
+                <th>Auction Name</th>
+                <th>Auction Type</th>
+                <th>Min Amount</th>
+                <th>Max Amount</th>
+                <th>Bid Amount</th>
+                <th>Auction Status</th>
+                <th>Who Won Bid</th>
+                <th>Details</th>
+            </tr>
+            <% closedAuctions.map( eachObj => { %>
+                <tr><td> <%= eachObj['auction_id']['admin_id']['name'] %> </td>
+                    <td>  <%= eachObj['auction_id']['auction_name'] %> </td>
+                    <td>  <%= eachObj['auction_id']['auction_type'] %> </td>
+                    <td>  <%= eachObj['auction_id']['min_amount'] %> </td>
+                    <td>  <%= eachObj['auction_id']['max_amount'] %> </td>
+                    <td>  <%= eachObj['bid_amount'] %> </td>
+                    <td>  <%= eachObj['auction_id']['auction_status'] %> </td>
+                    <td>  <%= eachObj['auctioneer_id']['name'] %> </td>
+                    <td><a href="http://localhost:3000/admin-auctions/auction_id/<%= eachObj['auction_id']['_id'] %>"><button class="btn btn-outline">View</button></a></td>
+                </tr>
+            <% }) %>
+        </table>
+    </div>
+</div>
