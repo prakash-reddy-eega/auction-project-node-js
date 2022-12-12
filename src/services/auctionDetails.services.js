@@ -432,6 +432,17 @@ const getSpecificBiddingDetails = async () => {
     }
 }
 
+//get bidding history of a specific auction with auction id
+const getSpecificClosedBidDetails =  async (auctionId) => {
+    try {
+        const biddingDetails  = await Bidding.find({'auction_id': auctionId}).sort({'bid_amount': -1})
+        return biddingDetails
+    } catch (error) {
+        console.log(error)
+    }
+    
+}
+
 module.exports = {
     checkUserInDb,
     addNewAuctioneerToDb,
@@ -448,5 +459,7 @@ module.exports = {
     insertBiddingIntoDb,
     getBiddingDetails,
     changeAuctionStatus,
-    getSpecificBiddingDetails
+    getSpecificBiddingDetails,
+    getSpecificClosedBidDetails,
+    getAuctionDetails
 }

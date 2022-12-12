@@ -243,6 +243,19 @@ const showAuctioneerBiddings = async (req, res) => {
     }
 }
 
+//showing ongoing specific bid details with auction id
+const showingClosedBidDetailsToAuctioneer = async (req, res) => {
+    try {
+        const auctionId = req.params.auction_id
+        const biddingDetails = await auctiondDetailsServices.getSpecificClosedBidDetails(auctionId)
+        const auctionDetails = await auctiondDetailsServices.getAuctionDetails(auctionId)
+        res.status(200).render('pages/biddingHistory', {'biddingDetails':biddingDetails, 'auctionDetails': auctionDetails})
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     loginRoute,
     signUpRoute,
@@ -263,5 +276,6 @@ module.exports = {
     viewSpecifcAuctionToBid,
     getBiddingDetails,
     closeAuction,
-    showAuctioneerBiddings
+    showAuctioneerBiddings,
+    showingClosedBidDetailsToAuctioneer
 }

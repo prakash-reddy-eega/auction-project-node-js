@@ -68,4 +68,7 @@ router.get('/close-auction/:auction_id',paramValidation, adminJwtValidation, auc
 //show user biddings (auctioneer type)
 router.get('/auctioneer-my-biddings', auctioneerJwtValidation, auctonDetailsController.showAuctioneerBiddings)
 
+//showing closed specific auction bid details to auctioneer
+router.get('/auctioneer-auctions/auction_bid_details/:auction_id', paramValidation, auctioneerJwtValidation, auctonDetailsController.showingClosedBidDetailsToAuctioneer)
+
 module.exports = router

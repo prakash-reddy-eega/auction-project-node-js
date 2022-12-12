@@ -16,6 +16,7 @@
                         <th>Bid Amount</th>
                         <th>Auction Status</th>
                         <th>Auctioneer  Name</th>
+                        <th>Bidding Details</th>
                     </tr>
                     <% biddingDetails.map( eachObj => { %>
                         <tr><td> <%= eachObj['auction_id']['admin_id']['name'] %> </td>
@@ -26,6 +27,7 @@
                             <td>  <%= eachObj['bid_amount'] %> </td>
                             <td>  <%= eachObj['auction_id']['auction_status'] %> </td>
                             <td>  <%= eachObj['auctioneer_id']['name'] %> </td>
+                            <td> <a href="http://localhost:3000/auctioneer-auctions/auction_bid_details/<%=eachObj['auction_id']['_id'] %>"><button class="btn"></button> Details </button></a></td> 
                         </tr>
                     <% }) %>
                 </tr>

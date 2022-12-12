@@ -1,0 +1,28 @@
+<%- include('../common/auctioneerDashBoard') %>
+<div class="m-3">
+    <h3 class="font-weight-bold mt-3 mr-5"><%= auctionDetails['auction_name'] %> Details</h3>
+    <p>  <span class="font-weight-bold"> Auction Type:  </span>   <%= auctionDetails['auction_type'] %> </p>
+    <p>  <span class="font-weight-bold"> Min Amount:    </span>   <%= auctionDetails['min_amount'] %> </p>
+    <p>  <span class="font-weight-bold"> Max Amount:    </span>   <%= auctionDetails['max_amount'] %> </p>
+    <p>  <span class="font-weight-bold"> Auction Status:</span> <span id="auctionStatus" > <%= auctionDetails['auction_status'] %>  </span></p>
+    <div class="mt-5">
+        <h4 class="font-weight-bold mt-3 mr-5">Bid History</h4>
+        <table class="table">
+            <tr>
+                <th>Auctioneer Name</th>
+                <th>Bid Amount</th>
+            </tr>
+            <% biddingDetails.map( eachObj => { %>
+                <tr>
+                    <td> <%= eachObj['auctioneer_id']['name'] %> </td>
+                    <td> <%= eachObj['bid_amount'] %>  </td>
+                </tr>
+             <% }) %>
+        </table>
+        <% if(auctionDetails['auction_status'] == 'closed'){ %>
+            <p class="ml-5 font-weight-bold">Bid Has Been Closed,  And The Winner Is <span class="text-info"><%= biddingDetails[0]['auctioneer_id']['name'] %></span></p>
+        <% }else{ %>
+            <p class="ml-5 font-weight-bold"> So far, Highest is <span class="text-info"><%= biddingDetails['bid_amount'] %></span></p>
+        <% } %>
+    </div>
+</div>
