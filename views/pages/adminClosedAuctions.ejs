@@ -1,7 +1,9 @@
 <%- include('../common/adminDashBoard') %>
 <div class="m-3">
     <h3 class="font-weight-bold">Closed Auctions</h3>
-    <div>
+    <% if(closedAuctions.length == 0){ %>
+        <p class="font-weight-bold">  No Closed Auctions</p>
+    <% }else{ %>
         <table class="table">
             <tr>
                 <th>Admin name</th>
@@ -28,4 +30,7 @@
             <% }) %>
         </table>
     </div>
+     <% } %>   
+    <div>
+        
 </div>

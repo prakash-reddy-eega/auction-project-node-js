@@ -232,10 +232,14 @@ const addNewAuctionIntoDb = (auctionDetails) => {
     }
 }
 
-//getting all auctions details for admin dashboard
+//getting all available auctions details for admin dashboard
 const getAuctionsForAdminDashboard = async () => {
     try {
-        const auctionData = await Auction.find()
+        const loginUser = JSON.parse(localStorage.getItem('adminDetails'))
+        const username = loginUser['username'].trim()
+        const adminDetails = await Admin.findOne({'username': username})
+        const adminId = adminDetails['_id']
+        const auctionData = await Auction.find({'admin_id': adminId})
         const filteredDAta = auctionData.filter( eachObj => eachObj['auction_status'] != "closed")
         return filteredDAta
     } catch (error) {
@@ -314,13 +318,24 @@ const getClosedAuctionsWithWinner = async closedAuctionsIds => {
 //     return obj
 // })
 
-//get closed auction details from db
+//get closed auction details from db for admin
 const getClosedAuctions = async() =>{
     try {
-        const closedAuctions = await Auction.find({'auction_status': 'closed'})
-        const closedAuctionsIds = closedAuctions.map( eachObj => eachObj['_id'])
-        const closedAuctionsWithWinner = await getClosedAuctionsWithWinner(closedAuctionsIds) 
-        return closedAuctionsWithWinner
+        const loginUser = JSON.parse(localStorage.getItem('adminDetails'))
+        const username = loginUser['username'].trim()
+        const adminDetails = await Admin.findOne({'username': username})
+        const adminId = adminDetails['_id']
+        const auctionData = await Auction.find({'admin_id': adminId})
+        // const closedAuctions = await Auction.find({'auction_status': 'closed'})
+        const closedAuctions = auctionData.filter( eachObj => eachObj['auction_status'] == 'closed')
+        if(closedAuctions.length == 0){
+            return []
+        }else{
+            const closedAuctionsIds = closedAuctions.map( eachObj => eachObj['_id'])
+            const closedAuctionsWithWinner = await getClosedAuctionsWithWinner(closedAuctionsIds) 
+            return closedAuctionsWithWinner
+        }
+        
     } catch (error) {
         console.log(error)
     }
@@ -362,6 +377,17 @@ const getAuctionDetails = async id => {
     return auctionDetails[0]
 }
 
+//getting highest Bid on specific auction with auction id
+const getHighhestBidOnAuction = async auction_id => {
+    try {
+        const bidDetails = await Bidding.find({'auction_id': auction_id}).sort({'bid_amount': -1}).limit(1)
+        const highestBid = bidDetails[0]['bid_amount']
+        return highestBid
+    } catch (error) {
+        
+    }
+}
+
 //inserting bidding values into db
 const insertBiddingIntoDb = (biddingDetails) => {
     try {
@@ -375,8 +401,12 @@ const insertBiddingIntoDb = (biddingDetails) => {
                 resolve({status: 400, message: "bid is greater than mentioned max amount"})
             }else if(auctionDetails['auction_status'] == 'closed'){
                 resolve({status: 400, message: "bid is already closed"})
-            }else{
-                await Auction.updateOne({'_id':auction_id},{'auction_status': "running"})
+            }else if(auctionDetails['auction_status'] == 'running'){
+                const higestBid = await getHighhestBidOnAuction(auction_id)
+                if(bid_amount <= higestBid){
+                    resolve({status: 400, message: "Your Bid Should Be MOre Than Previous Bid"})
+                }else{
+                    await Auction.updateOne({'_id':auction_id},{'auction_status': "running"})
                 const data = {auction_id: auction_id, auctioneer_id: auctioneer_id, bid_amount: bid_amount}
                 Bidding.insertMany([data], err => {
                     if(err){
@@ -385,9 +415,8 @@ const insertBiddingIntoDb = (biddingDetails) => {
                         resolve({status: 200, message: "Successfully bidding details inserted in to Db"})
                     }
                 })
-                
+                }
             }
-
         })
     } catch (error) {
         console.log(error)
@@ -418,6 +447,19 @@ const changeAuctionStatus = async(auction_id) => {
     }
 }
 
+// validating login user bid with closed auction highest bid
+const validateBidWithHighestClosedBid = async (id, eachAuc, isIncludeAuc) => {
+    const bidDetails = await Bidding.find({'auction_id': id}).sort({'bid_amount': -1}).limit(1)
+    const highestBid = bidDetails[0]['bid_amount']
+    return eachAuc['bid_amount'] >= highestBid
+    // console.log(eachAuc['bid_amount'] > highestBid)
+    // console.log(eachAuc['bid_amount'] , highestBid)
+    // if(eachAuc['bid_amount'] >= highestBid){
+    //     console.log("iiii")
+    //     userWonBids.push(eachAuc)
+    // }
+}
+
 //getting login user bidding details
 const getSpecificBiddingDetails = async () => {
     try {
@@ -425,8 +467,20 @@ const getSpecificBiddingDetails = async () => {
         const username = loginUser['username'].trim()
         const auctioneerDetails = await Auctioneer.findOne({'username': username})
         const auctioneerId = auctioneerDetails['_id']
-        const bidDetails = await Bidding.find({'auctioneer_id': auctioneerId})
-        return bidDetails
+        const loginUserBids = await Bidding.find({'auctioneer_id': auctioneerId})
+        const loginUserClosedBids = loginUserBids.filter( eachObj => eachObj['auction_id']['auction_status'] == 'closed')
+        const userWonBids = []
+
+        for(let eachAuc of loginUserClosedBids){
+            const isIncludeAuc = userWonBids.includes(eachAuc)
+            const isHighestBid = await validateBidWithHighestClosedBid(eachAuc['auction_id']['_id'], eachAuc, isIncludeAuc)
+            if(isHighestBid && !isIncludeAuc){
+                userWonBids.push(eachAuc)
+            }
+        }
+        // console.log(userWonBids)
+        
+        return userWonBids
     } catch (error) {
         console.log(error)
     }

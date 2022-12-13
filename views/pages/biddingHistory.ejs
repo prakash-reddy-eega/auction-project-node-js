@@ -22,7 +22,7 @@
         <% if(auctionDetails['auction_status'] == 'closed'){ %>
             <p class="ml-5 font-weight-bold">Bid Has Been Closed,  And The Winner Is <span class="text-info"><%= biddingDetails[0]['auctioneer_id']['name'] %></span></p>
         <% }else{ %>
-            <p class="ml-5 font-weight-bold"> So far, Highest is <span class="text-info"><%= biddingDetails['bid_amount'] %></span></p>
+            <p class="ml-5 font-weight-bold"> So far, Highest Bid is <span class="text-info"> <%= biddingDetails[0]['bid_amount'] %></span></p>
         <% } %>
     </div>
 </div>

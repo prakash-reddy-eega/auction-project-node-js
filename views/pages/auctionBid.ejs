@@ -17,6 +17,7 @@
         <% if(biddingDetails.length == 0){ %>
             <h3 class="font-weight-bold mt-3 mr-5">Current Biddings</h3>
             <p class="font-weight-bold"> No Bide Started Yet On This Auction</p>
+            <button type="button" class="btn btn-info m-2" id="refreshButton">Refresh</button>
         <% }else{ %>
             <div class="d-flex mt-5">
                 <h3 class="font-weight-bold mt-3 mr-5">Current Biddings</h3>
@@ -53,6 +54,7 @@
         auction_id: auctionObjIdEl.textContent.trim(),
         bid_amount: ''
     }
+
     bidAmountEl.addEventListener('change', event => {
         bidDetails['bid_amount'] = event.target.value
     })

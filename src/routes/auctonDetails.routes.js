@@ -47,7 +47,7 @@ router.get('/admin-logout', auctonDetailsController.adminLogout)
 //update existing auction details route
 router.post('/update-auction-details',updateAuctionValidation, adminJwtValidation, auctonDetailsController.updateAuctionDetails)
 
-//get closed Auctions route
+//get closed Auctions route (admin)
 router.get('/admin-view-closed-auctions', adminJwtValidation, auctonDetailsController.displayClosedAuctions)
 
 // auctioneer logout route
@@ -59,7 +59,7 @@ router.get('/auctioneer-available-auctions', auctioneerJwtValidation, auctonDeta
 //display specific auction details with auction id (auctioneer type)
 router.get('/auctioneer-auctions/auction_bid/:auction_id',paramValidation, auctioneerJwtValidation, auctonDetailsController.viewSpecifcAuctionToBid)
 
-//make bidding route
+//make bid route
 router.post('/make-bidding', biddingFeildsValidation, auctioneerJwtValidation, auctonDetailsController.getBiddingDetails)
 
 //closing auction route
