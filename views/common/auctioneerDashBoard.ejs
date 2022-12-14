@@ -10,6 +10,9 @@
      const userNameEl = document.getElementById('userName')
     const myBiddingsEl = document.getElementById("myBiddings")
     const availableAuctionsEl = document.getElementById('availableAuctions')
+    if(localStorage.getItem('auctioneerDetails') == null){
+        window.location.replace('http://localhost:3000/login')
+    }
 
     // const userDetals = JSON.parse(localStorage.getItem('adminDetails'))
     userNameEl.textContent = "Welcome - " + userDetals['username']

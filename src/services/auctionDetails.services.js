@@ -177,6 +177,7 @@ const addNewAdminToDb = (userDetails) => {
             if (isUserAlreadyExists) {
                 response['status'] = 400
                 response['message'] = "Username has been taken"
+                console.log(error)
                 resolve(response)
             } else {
                 Admin.insertMany([userDetails], err => {
@@ -282,6 +283,8 @@ const updateAuctionDetailsInDb =async auctionDetails => {
         const dbAuctionDetila = await Auction.findOne({'_id': auction_id})
         if(dbAuctionDetila['auction_status'] == "closed"){
             return {'message': 'This Auction has been closed, You can not edit this', "status": 400}
+        }else if(dbAuctionDetila['auction_status'] == "running"){
+            return {'message': 'This Auction has been running, You can not edit this', "status": 400}
         }
         await Auction.updateOne({"_id": auction_id},{
             "auction_name":auction_name,
@@ -404,7 +407,7 @@ const insertBiddingIntoDb = (biddingDetails) => {
             }else if(auctionDetails['auction_status'] == 'running'){
                 const higestBid = await getHighhestBidOnAuction(auction_id)
                 if(bid_amount <= higestBid){
-                    resolve({status: 400, message: "Your Bid Should Be MOre Than Previous Bid"})
+                    resolve({status: 401, message: "Your Bid Should Be More Than Previous Heighest Bid"})
                 }else{
                     await Auction.updateOne({'_id':auction_id},{'auction_status': "running"})
                 const data = {auction_id: auction_id, auctioneer_id: auctioneer_id, bid_amount: bid_amount}
@@ -416,6 +419,16 @@ const insertBiddingIntoDb = (biddingDetails) => {
                     }
                 })
                 }
+            }else{
+                await Auction.updateOne({'_id':auction_id},{'auction_status': "running"})
+            const data = {auction_id: auction_id, auctioneer_id: auctioneer_id, bid_amount: bid_amount}
+            Bidding.insertMany([data], err => {
+                if(err){
+                    resolve({status: 400, message: "Issue in inserting bidding details into DB"})
+                }else{
+                    resolve({status: 200, message: "Successfully bidding details inserted in to Db"})
+                }
+            })
             }
         })
     } catch (error) {

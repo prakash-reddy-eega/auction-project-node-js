@@ -95,12 +95,14 @@
                 if(loginDetails['loginType'] == "auctioneer"){
                     const jwt = responseMsg['message']
                     const auctioneerDetails = {username: loginDetails['username'], jwToken: jwt}
+
                     localStorage.setItem('auctioneerDetails', JSON.stringify(auctioneerDetails))
                     window.location.replace("http://localhost:3000/auctioneer-dashboard")
                 }
                 if(loginDetails['loginType'] == "admin"){
                     const jwt = responseMsg['message']
                     const adminDetails = {username: loginDetails['username'], jwToken: jwt}
+                    
                     localStorage.setItem('adminDetails', JSON.stringify(adminDetails))
                     window.location.replace("http://localhost:3000/admin-dashboard")
                 }

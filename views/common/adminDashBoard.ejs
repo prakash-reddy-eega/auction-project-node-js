@@ -9,6 +9,9 @@
 </div>
 
 <script>
+    if(localStorage.getItem('adminDetails') == null){
+        window.location.replace('http://localhost:3000/login')
+    }
     const userNameEl = document.getElementById('userName')
     const createAuctionEl = document.getElementById("createAuction")
     const availableAuctionsEl = document.getElementById('availableAuctions')
