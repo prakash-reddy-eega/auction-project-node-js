@@ -2,6 +2,7 @@ const buildEnvironment = require("./src/configs/envConfigs").config();
 const express  = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const routes = require("./src");
 app.use(bodyParser.json())
 
 
@@ -11,7 +12,7 @@ require('./src/configs/mongoConfigs')
 app.set('view engine', 'ejs')
 
 
-app.use('/', require('./src/routes/auctonDetails.routes'))
+app.use('/', routes)
 
 app.listen(3000, () => {
     console.log('server running at 3000 port')

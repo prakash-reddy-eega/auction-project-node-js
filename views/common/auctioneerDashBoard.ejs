@@ -11,7 +11,7 @@
     const myBiddingsEl = document.getElementById("myBiddings")
     const availableAuctionsEl = document.getElementById('availableAuctions')
     if(localStorage.getItem('auctioneerDetails') == null){
-        window.location.replace('http://localhost:3000/login')
+        window.location.replace('http://localhost:3000/user/login')
     }
 
     // const userDetals = JSON.parse(localStorage.getItem('adminDetails'))
@@ -19,12 +19,12 @@
 
     //display available auctions
     availableAuctionsEl.addEventListener('click', () => {
-        window.location.replace("http://localhost:3000/auctioneer-available-auctions")
+        window.location.replace("http://localhost:3000/auction/auctioneer-available-auctions")
     })
 
     //displaying my biddings
     myBiddingsEl.addEventListener('click',() => {
-        window.location.replace("http://localhost:3000/auctioneer-my-biddings")
+        window.location.replace("http://localhost:3000/bidding/auctioneer-my-biddings")
     })
 
 

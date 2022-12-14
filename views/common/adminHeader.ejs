@@ -51,10 +51,10 @@
     })
 
     logoutButtonEl.addEventListener("click", () => {
-        const URL = "http://localhost:3000/admin-logout"
+        const URL = "http://localhost:3000/user/admin-logout"
         axios.get(URL).then(res => {
             localStorage.removeItem('adminDetails')
-                window.location.replace('http://localhost:3000/login')
+                window.location.replace('http://localhost:3000/user/login')
         }).catch(err => {
             console.log(err)
         })

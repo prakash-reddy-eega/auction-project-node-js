@@ -68,7 +68,7 @@
             min_amount: auctionDetails['minAmount'],
             max_amount: auctionDetails['maxAmount']
         }
-        const URL = "http://localhost:3000/insert-auction-db"
+        const URL = "http://localhost:3000/auction/insert-auction-db"
         axios.post(URL, postData).then(res => {
             if(res.status == 200){
                 messageEl.classList.add('text-success')

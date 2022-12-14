@@ -52,11 +52,10 @@
     })
 
     logoutButtonEl.addEventListener("click", () => {
-        const URL = "http://localhost:3000/auctioneer-logout"
+        const URL = "http://localhost:3000/user/auctioneer-logout"
         axios.get(URL).then(res => {
-            console.log("jjjjjjjjjjjjjjj")
             localStorage.removeItem('auctioneerDetails')
-                window.location.replace('http://localhost:3000/login')
+                window.location.replace('http://localhost:3000/user/login')
         }).catch(err => {
             console.log(err)
         })

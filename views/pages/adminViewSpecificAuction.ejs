@@ -157,7 +157,7 @@
 
     //closing bid
     closeButtonEl.addEventListener('click', () => {
-        const URL = `http://localhost:3000/close-auction/${updatedAuctionDetauls['auction_id']}`
+        const URL = `http://localhost:3000/auction/close-auction/${updatedAuctionDetauls['auction_id']}`
         axios.get(URL).then( res => {
             if(res.status == 200){
                 messageEl.classList.add('text-success')
@@ -178,7 +178,7 @@
 
     saveButtonEl.addEventListener('click', event => {
         console.log(updatedAuctionDetauls)
-        const URL = "http://localhost:3000/update-auction-details"
+        const URL = "http://localhost:3000/auction/update-auction-details"
         axios.post(URL, updatedAuctionDetauls).then( res => {
             resMessageEl.classList.add('text-success')
             resMessageEl.textContent = res.data

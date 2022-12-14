@@ -25,7 +25,7 @@
                     <td>  <%= eachObj['bid_amount'] %> </td>
                     <td>  <%= eachObj['auction_id']['auction_status'] %> </td>
                     <td>  <%= eachObj['auctioneer_id']['name'] %> </td>
-                    <td><a href="http://localhost:3000/admin-auctions/auction_id/<%= eachObj['auction_id']['_id'] %>"><button class="btn btn-outline">View</button></a></td>
+                    <td><a href="http://localhost:3000/auction/admin-auctions/auction_id/<%= eachObj['auction_id']['_id'] %>"><button class="btn btn-outline">View</button></a></td>
                 </tr>
             <% }) %>
         </table>

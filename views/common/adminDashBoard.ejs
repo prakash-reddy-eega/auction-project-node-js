@@ -10,7 +10,7 @@
 
 <script>
     if(localStorage.getItem('adminDetails') == null){
-        window.location.replace('http://localhost:3000/login')
+        window.location.replace('http://localhost:3000/user/login')
     }
     const userNameEl = document.getElementById('userName')
     const createAuctionEl = document.getElementById("createAuction")
@@ -22,16 +22,16 @@
 
     //create new auction
     createAuctionEl.addEventListener("click", () => {
-        window.location.replace("http://localhost:3000/add-new-auction")
+        window.location.replace("http://localhost:3000/auction/add-new-auction")
     })
 
     //display available auctions
     availableAuctionsEl.addEventListener('click', () => {
-        window.location.replace("http://localhost:3000/admin-view-auctions")
+        window.location.replace("http://localhost:3000/auction/admin-view-auctions")
     })
 
     //display closed auctions
     closedAuctionsEl.addEventListener('click', () => {
-        window.location.replace("http://localhost:3000/admin-view-closed-auctions")
+        window.location.replace("http://localhost:3000/auction/admin-view-closed-auctions")
     })
 </script>

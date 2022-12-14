@@ -64,7 +64,7 @@
     })
 
     bidButtonEl.addEventListener('click', () => {
-        const URL = "http://localhost:3000/make-bidding"
+        const URL = "http://localhost:3000/bidding/make-bidding"
         axios.post(URL, bidDetails).then( res => {
             if(res.status == 200){
                 messageEl.classList.add('text-success')

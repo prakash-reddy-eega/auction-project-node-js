@@ -115,7 +115,7 @@
                     const responseMsg = await res.json()
                     console.log(responseMsg)
                     if (res.status == 200) {
-                        window.location.replace("http://localhost:3000/login")
+                        window.location.replace("http://localhost:3000/user/login")
                     } else if(res.status == 400){
                         errEl.textContent = responseMsg['message']
                     } else {
@@ -133,7 +133,7 @@
                     const responseMsg = await res.json()
                     console.log(responseMsg)
                     if (res.status == 200) {
-                        window.location.replace("http://localhost:3000/login")
+                        window.location.replace("http://localhost:3000/user/login")
                     } else if(res.status == 400){
                         errEl.textContent = responseMsg['message']
                     } else{

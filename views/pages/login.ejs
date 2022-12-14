@@ -39,7 +39,7 @@
     <p id="err" class="text-danger ml-4"></p>
     <div class="ml-4 mt-3">
         <p>New User?</p>
-        <a href="http://localhost:3000/signup"><button class="btn btn-success">SignUp</button></a>
+        <a href="http://localhost:3000/user/signup"><button class="btn btn-success">SignUp</button></a>
     </div>
 
 </body>
@@ -87,7 +87,7 @@
             },
             body: JSON.stringify(loginDetails)
         };
-        const URL = "http://localhost:3000/validate-user-login"
+        const URL = "http://localhost:3000/user/validate-user-login"
         fetch(URL, options).then( async res => {
             const responseMsg = await res.json()
             console.log(responseMsg)
@@ -97,14 +97,14 @@
                     const auctioneerDetails = {username: loginDetails['username'], jwToken: jwt}
 
                     localStorage.setItem('auctioneerDetails', JSON.stringify(auctioneerDetails))
-                    window.location.replace("http://localhost:3000/auctioneer-dashboard")
+                    window.location.replace("http://localhost:3000/auction/auctioneer-dashboard")
                 }
                 if(loginDetails['loginType'] == "admin"){
                     const jwt = responseMsg['message']
                     const adminDetails = {username: loginDetails['username'], jwToken: jwt}
                     
                     localStorage.setItem('adminDetails', JSON.stringify(adminDetails))
-                    window.location.replace("http://localhost:3000/admin-dashboard")
+                    window.location.replace("http://localhost:3000/auction/admin-dashboard")
                 }
             }else if (res.status == 400){
                 errEl.textContent = responseMsg['message']
