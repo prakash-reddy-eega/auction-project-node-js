@@ -5,6 +5,7 @@ exports.config = () => {
     let envPath = "environment/.env-dev";
     if (environment === "dev") {
         envPath = "environment/.env-dev";
+        console.log(envPath)
     } else if (environment === "stg") {
         envPath = "environment/.env-stg";
     }

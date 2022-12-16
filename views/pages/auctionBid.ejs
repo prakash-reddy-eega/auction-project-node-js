@@ -65,7 +65,13 @@
 
     bidButtonEl.addEventListener('click', () => {
         const URL = "http://localhost:3000/bidding/make-bidding"
-        axios.post(URL, bidDetails).then( res => {
+        const auctioneerJwtDetails = JSON.parse(localStorage.getItem('auctioneerDetails'))
+        const jwtToken = auctioneerJwtDetails['jwToken']
+        const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `JWT ${jwtToken}`
+                }
+        axios.post(URL, bidDetails, {headers: headers}).then( res => {
             if(res.status == 200){
                 messageEl.classList.add('text-success')
                 messageEl.textContent = res.data

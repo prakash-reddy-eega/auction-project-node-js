@@ -158,7 +158,13 @@
     //closing bid
     closeButtonEl.addEventListener('click', () => {
         const URL = `http://localhost:3000/auction/close-auction/${updatedAuctionDetauls['auction_id']}`
-        axios.get(URL).then( res => {
+        const adminJwtDetails = JSON.parse(localStorage.getItem('adminDetails'))
+        const jwtToken = adminJwtDetails['jwToken']
+        const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `JWT ${jwtToken}`
+                }
+        axios.get(URL, {headers: headers}).then( res => {
             if(res.status == 200){
                 messageEl.classList.add('text-success')
                 messageEl.textContent = res.data
@@ -177,9 +183,14 @@
     })
 
     saveButtonEl.addEventListener('click', event => {
-        console.log(updatedAuctionDetauls)
         const URL = "http://localhost:3000/auction/update-auction-details"
-        axios.post(URL, updatedAuctionDetauls).then( res => {
+        const adminJwtDetails = JSON.parse(localStorage.getItem('adminDetails'))
+        const jwtToken = adminJwtDetails['jwToken']
+        const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `JWT ${jwtToken}`
+                }
+        axios.post(URL, updatedAuctionDetauls, {headers: headers}).then( res => {
             resMessageEl.classList.add('text-success')
             resMessageEl.textContent = res.data
             console.log(res)

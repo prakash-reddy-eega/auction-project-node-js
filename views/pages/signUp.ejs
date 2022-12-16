@@ -109,7 +109,7 @@
             };
             //sign up condition for auctioneer type    
             if (signupDetails['userType'] == "auctioneer") {
-                const URL = "http://localhost:3000/add-auctioneer"
+                const URL = "http://localhost:3000/user/add-auctioneer"
 
                 fetch(URL, options).then(async res => {
                     const responseMsg = await res.json()
@@ -127,7 +127,7 @@
             }
             //sign up condition for admin type
             if (signupDetails['userType'] == "admin") {
-                const URL = "http://localhost:3000/add-admin"
+                const URL = "http://localhost:3000/user/add-admin"
 
                 fetch(URL, options).then(async res => {
                     const responseMsg = await res.json()

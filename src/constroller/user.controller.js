@@ -81,4 +81,4 @@ const auctioneerLogout = (req, res) => {
     }
 }
 
-module.exports = {loginRoute, signUpRoute, validateUserLogin, addNewAuctioneer, addNewAdmin, adminLogout, auctioneerLogout}
+module.exports = {loginRoute, signUpRoute, auctioneerLogout, addNewAuctioneer, addNewAdmin, adminLogout, auctioneerLogout, validateUserLogin}

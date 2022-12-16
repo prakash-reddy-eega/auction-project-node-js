@@ -7,6 +7,7 @@ const {
     LocalStorage
 } = require('node-localstorage');
 var localStorage = new LocalStorage('./scratch');
+const bcrypt = require('bcrypt')
 
 //check user login details with DB
 const checkUserInDb = async (userDetails) => {
@@ -18,7 +19,8 @@ const checkUserInDb = async (userDetails) => {
             })
             if (dbUseerDetails.length != 0) {
                 if (dbUseerDetails[0]['username'] == userDetails['username']) {
-                    if (dbUseerDetails[0]['password'] == userDetails['password']) {
+                    const decryptedPassword =  await bcrypt.compare(userDetails['password'], dbUseerDetails[0]['password'])
+                    if (decryptedPassword) {
                         const payload = {
                             username: dbUseerDetails[0]['username']
                         }
@@ -59,7 +61,8 @@ const checkUserInDb = async (userDetails) => {
             })
             if (dbUseerDetails.length != 0) {
                 if (dbUseerDetails[0]['username'] == userDetails['username']) {
-                    if (dbUseerDetails[0]['password'] == userDetails['password']) {
+                    const decryptedPassword =  await bcrypt.compare(userDetails['password'], dbUseerDetails[0]['password'])
+                    if (decryptedPassword) {
                         const payload = {
                             username: dbUseerDetails[0]['username']
                         }
@@ -127,6 +130,9 @@ const addNewAuctioneerToDb = (userDetails) => {
                 response['message'] = "Username has been taken"
                 resolve(response)
             } else {
+                const password = userDetails['password']
+                const hashedPassword = await bcrypt.hash(password, 10)
+                userDetails['password'] = hashedPassword
                 Auctioneer.insertMany([userDetails], err => {
                     if (err) {
                         response['status'] = 400
@@ -175,6 +181,9 @@ const addNewAdminToDb = (userDetails) => {
                 console.log(error)
                 resolve(response)
             } else {
+                const password = userDetails['password']
+                const hashedPassword = await bcrypt.hash(password, 10)
+                userDetails['password'] = hashedPassword
                 Admin.insertMany([userDetails], err => {
                     if (err) {
                         response['status'] = 400
@@ -201,6 +210,8 @@ const removeLoginDetailsFromLocalSrg = () => {
         if(adminDetails != null){
             localStorage.removeItem('adminDetails')
             return {status: 200}
+        }else{
+            return {status: 200}
         }
     } catch (error) {
         console.log(error)
@@ -214,6 +225,8 @@ const removeAuctionerLoginDetailsFromLocalSrg = () => {
         const auctioneerDetails = localStorage.getItem('auctioneerDetails')
         if(auctioneerDetails != null){
             localStorage.removeItem('auctioneerDetails')
+            return {status: 200}
+        }else{
             return {status: 200}
         }
     } catch (error) {

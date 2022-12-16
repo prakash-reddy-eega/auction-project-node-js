@@ -68,8 +68,14 @@
             min_amount: auctionDetails['minAmount'],
             max_amount: auctionDetails['maxAmount']
         }
+        const adminJwtDetails = JSON.parse(localStorage.getItem('adminDetails'))
+        const jwtToken = adminJwtDetails['jwToken']
+        const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `JWT ${jwtToken}`
+                }
         const URL = "http://localhost:3000/auction/insert-auction-db"
-        axios.post(URL, postData).then(res => {
+        axios.post(URL, postData, {headers: headers}).then(res => {
             if(res.status == 200){
                 messageEl.classList.add('text-success')
                 messageEl.textContent = res.data
@@ -78,11 +84,15 @@
                 messageEl.textContent = res.data
             }
         }).catch( err => {
-            messageEl.classList.add('text-danger')
-                messageEl.textContent = "Please check all feilds  "
             console.log(err.response)
-        })
-        
+            if(err.response.status == 401){
+                messageEl.classList.add('text-danger')
+                messageEl.textContent = err.response.data
+            }else{
+                messageEl.classList.add('text-danger')
+                messageEl.textContent = "Please check all feilds "
+            }
+        })    
     })
     
 </script>

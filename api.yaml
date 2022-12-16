@@ -1,0 +1,208 @@
+openapi: 3.0.0
+info:
+  title: My Auction Project
+  description: Auction Project APIs
+  version: 1.0.0
+servers: [{ url: http://localhost:3000/ }]
+paths:
+  /user/login/:
+    get:
+      tags:
+        - "User"
+      summary: "Login Page"
+      description: It just returna a Login page Html code
+      responses:
+        200:
+          description: Success
+          schema:
+            type: html
+  /user/signup/:
+    get:
+      tags:
+        - "User"
+      summary: "signUp Page"
+      description: It just returna a SignUp page Html code
+      responses:
+        200:
+          description: Success
+          schema:
+            type: Html
+  /user/validate-user-login/:
+    post:
+      tags:
+        - "User"
+      summary: "Validate Login Credentials"
+      operationId: "VerifyUser"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginVerify"
+      responses:
+        200:
+          description: It Returns Jwt token
+          schema:
+            type: object
+            properties:
+              message:
+                type: string 
+        400:
+          description: It Returns a Json Object With Message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        401:
+          description: It Returns a Json Object With Message
+          schema:
+            type: object
+            properties:
+              message:
+                type: object        
+  /user/add-auctioneer:
+    post:
+      tags:
+        - "User"
+      summary: Add Auctioneer
+      operationId: addAuctioneer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUser"
+      responses:
+        200:
+          description: It Returns a Json Object With Message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string  
+        400:
+          description: It Returns a Json Object With Message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        401:
+          description: It Returns a Json Object With Message
+          schema:
+            type: object
+            properties:
+              message:
+                type: object            
+  /user/add-admin:
+    post:
+      tags:
+        - "User"
+      summary: Add Admin
+      operationId: addAdmin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUser"
+      responses:
+        200:
+          description: It Returns a Json Object With Message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string  
+        400:
+          description: It Returns a Json Object With Message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        401:
+          description: It Returns a Json Object With Message
+          schema:
+            type: object
+            properties:
+              message:
+                type: object   
+  /user/admin-logout:
+    get:
+      tags:
+        - "User"
+      summary: "Admin Logout"  
+      description: "It will erase the user login details from local storage"
+      responses:
+        200:
+          description: Success
+  /user/auctioneer-logout:
+    get:
+      tags:
+        - "User"
+      summary: "Auctioneer Logout"  
+      description: "It will erase the user login details from local storage"
+      responses:
+        200:
+          description: Success
+  /auction/auctioneer-dashboard:
+    get:
+      tags:
+        - "Auction"
+      summary: "Auctioneer Dashboard"
+      description: "It Returns Auctioneer Dashboard on Successful Api request"  
+      responses:
+        200:
+          description: Success    
+          schema:
+            type: html      
+
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      description: |
+        Bearer \<token\>
+        <br/>OR<br/>
+        ottplay-apikey \<apikey\>
+      name: Authorization
+  schemas:
+    RegisterUser:
+      title: User Register
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string  
+        email_id:
+          type: "string"
+          format: "email"
+        password:
+          type: string
+        confirmPassword:
+          type: string  
+      required:
+        - name
+        - username
+        - email_id
+        - password    
+        - confirmPassword
+    LoginVerify:
+      title: User Login
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string 
+        loginType:
+          type: string
+      required:
+        - username
+        - password
+        - loginType    

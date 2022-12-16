@@ -1,8 +1,7 @@
 const router = require('express').Router()
 const userController = require('../constroller/user.controller')
 
-const {loginPageFeildValidation,signupPageValidations,addNewAuction,updateAuctionValidation,biddingFeildsValidation, paramValidation} = require('../validations/feildValidations')
-const {auctioneerJwtValidation, adminJwtValidation} = require('../validations/jwtTokenValidations')
+const {loginPageFeildValidation,signupPageValidations} = require('../validations/feildValidations')
 
 //login route
 router.get('/login', userController.loginRoute)
